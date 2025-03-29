@@ -1,68 +1,69 @@
-# 🌍 GCP Highly Available Global Web Server — User Guide
+# 🌐 GCP HA Multi-Region Web Server — Deployment Guide
 
-This guide walks you through deploying and managing a highly available, multi-region, autoscaling web server infrastructure using **Google Cloud Platform (GCP)** and **Terraform**.
+This repository provisions a **highly available**, **multi-region**, and **autoscaling** web server infrastructure on **Google Cloud Platform (GCP)** using **Terraform**.
 
 ---
 
-## 🚀 Overview
+## 🚀 Project Overview
 
-This solution creates a production-grade web infrastructure with:
+This infrastructure includes:
 
-- ✅ **Global HTTP Load Balancer**
-- ✅ **Managed Instance Groups (MIGs)** in 4 regions:
-  - `us-central1`
-  - `europe-west1`
+- 🌍 **Global HTTP Load Balancer**
+- 🌎 **Managed Instance Groups (MIGs)** in 4 regions:
+  - `us-central1` (Iowa)
+  - `europe-west1` (London)
   - `asia-northeast1` (Tokyo)
   - `southamerica-east1` (São Paulo)
-- ✅ **Autoscaling** (min: 2, max: 5)
-- ✅ **Apache Web Server** with a custom startup script
-- ✅ **Regional VPC subnets**, **NAT gateway**, and **firewall rules**
-- ✅ **Monitoring** with uptime checks
+- 📈 **Autoscaling**: 2–5 VMs per region based on CPU utilization
+- 🛠️ **Apache Web Server** installed via startup script
+- 🌐 **VPC with per-region subnets**, **NAT gateway**, **firewalls**
+- 🔎 **Monitoring**: Uptime checks via Google Cloud Monitoring
 
 ---
 
 ## 🔧 Prerequisites
 
-- A Google Cloud Project with billing enabled
-- IAM permissions to manage Compute, VPC, and Monitoring resources
-- [Terraform](https://www.terraform.io/downloads) installed
-- *(Optional)* [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) for manual validation
+- A GCP project with billing enabled
+- IAM roles for Compute Admin, Network Admin, Monitoring Admin
+- [Terraform CLI](https://www.terraform.io/downloads)
+- *(Optional)* [gcloud CLI](https://cloud.google.com/sdk/docs/install)
 
 ---
 
 ## 📁 Directory Structure
 
-| File                              | Purpose                                  |
-| --------------------------------- | ---------------------------------------- |
-| `1-providers.tf`                  | Google provider setup                    |
-| `2-vpc.tf`                        | VPC definition                           |
-| `4b-subnets.tf`                   | Subnets for US, Europe, Tokyo, São Paulo |
-| `3-security-group.tf`             | Firewall rules for web traffic           |
-| `4-nat.tf`                        | NAT Gateway setup                        |
-| `5-instance-template.tf`          | Default template                         |
-| `5b-instance-templates-global.tf` | Per-region instance templates            |
-| `6-backend.tf`                    | MIGs + autoscaling                       |
-| `7-frontend.tf`                   | Load balancer configuration              |
-| `8-firewall.tf`                   | Health check access rules                |
-| `9-variables.tf`                  | Configurable inputs                      |
-| `10-outputs.tf`                   | Key output values                        |
-| `11-uptime-check.tf`              | Global uptime monitoring                 |
-| `startup-script.sh`               | Apache setup script                      |
+```bash
+.
+├── 1-providers.tf               # Google provider configuration
+├── 2-vpc.tf                     # VPC definition
+├── 3-firewall.tf                # Firewall rules for HTTP and health checks
+├── 4-nat.tf                     # NAT router and configuration
+├── 5-subnets.tf                 # Subnets for each region
+├── 6-instance-template.tf       # Instance templates for VM instances
+├── 7-backend.tf                 # MIGs and autoscalers
+├── 8-frontend.tf                # Load balancer and health check
+├── 9-uptime-check.tf            # Uptime check configuration
+├── 10-variables.tf              # Input variables
+├── 11-outputs.tf                # Terraform output values
+├── startup-script.sh            # Apache installation startup script
+└── README.md                    # This documentation file
+```
 
 ---
 
 ## 🛠️ Deployment Instructions
 
-### 1. Clone the Repository
+### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/tiqsclass6/gcp-highly-available-web-server.git
-cd gcp-highly-available-web-server
+git clone https://github.com/tiqsclass6/gcp-ha-multi-region-webserver.git
+cd gcp-ha-multi-region-webserver
+code .
 ```
 
 ### 2. Configure Variables
 
-Edit `9-variables.tf` directly:
+Directly modify `10-variables.tf`:
 
 ```hcl
 project_id = "your-gcp-project-id"
@@ -77,76 +78,71 @@ vm_type    = "e2-micro"
 terraform init
 ```
 
-### 4. Format Terraform Configuration
+### 4. Format Terraform
 
 ```bash
 terraform fmt
 ```
 
-This ensures consistent code formatting.
-
-### 5. Validate Terraform Configuration
+### 5. Validate Terraform
 
 ```bash
 terraform validate
 ```
 
-This checks that your configuration is syntactically valid and internally consistent.
-
-### 6. Apply Infrastructure
+### 6. Apply the Infrastructure
 
 ```bash
 terraform apply
 ```
 
-Confirm the prompt and wait for provisioning to complete.
+Accept the prompt and wait a few minutes for provisioning.
 
 ---
 
-## 🌐 Access the Web Server
+## 🌐 Accessing the Web Server
 
-After deployment, Terraform will output the load balancer IP:
+After deployment, Terraform will output the load balancer’s IP:
 
-```ini
+```bash
 load_balancer_ip = "XX.XX.XX.XX"
 ```
 
-Visit `http://<load_balancer_ip>` in your browser to view the globally distributed Apache web server.
+Navigate to:
+
+```bash
+http://<load_balancer_ip>
+```
+
+You’ll see your custom Apache server served globally.
 
 ---
 
-## 📊 Monitoring & Health Checks
+## 📊 Monitoring & Uptime
 
-- Google Cloud Monitoring uptime checks are **enabled**
-- Load balancer uses **HTTP health checks** to remove unhealthy instances
-- Autoscaling is triggered based on **CPU utilization**
+- Google Cloud **uptime checks** are enabled
+- **HTTP health checks** remove unhealthy instances
+- **Autoscaling** triggers dynamically via CPU usage
 
 ---
 
-## 🫼 Cleanup
+## 🧼 Cleanup
 
-To destroy all resources created by Terraform:
+To destroy all resources:
 
 ```bash
 terraform destroy
 ```
 
-This will clean up all associated GCP infrastructure.
-
 ---
 
-## 🦘 Troubleshooting
+## 🛠 Troubleshooting
 
-| Issue                       | Solution                                                   |
-| --------------------------- | ---------------------------------------------------------- |
-| Instances show as unhealthy | Verify Apache is running and port 80 is open               |
-| Health check failing        | Confirm `/` is correctly served by the `startup-script.sh` |
-| Load balancer shows 502     | Ensure all instance groups are healthy                     |
-| Uptime check error          | Make sure Monitoring API is enabled in your GCP project    |
+| Problem                  | Solution                                                   |
+|--------------------------|------------------------------------------------------------|
+| MIGs show unhealthy      | Confirm Apache is running; port 80 is open                 |
+| Health check fails       | Ensure `/` path is served by startup script                |
+| 502 from Load Balancer   | Make sure instance groups are healthy                      |
+| Uptime check error       | Ensure Monitoring API is enabled in GCP                    |
 
 ---
-
-## 🙌 Credits
-
-Created and maintained by **TIQS Class 6**\
-*Infrastructure-as-Code for Cloud Excellence* 🌎🚀
