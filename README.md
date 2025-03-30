@@ -1,4 +1,4 @@
-# 🌐 GCP HA Multi-Region Web Server — Deployment Guide
+# 🌐 GCP HA Multi-Region Web Server
 
 This repository provisions a **highly available**, **multi-region**, and **autoscaling** web server infrastructure on **Google Cloud Platform (GCP)** using **Terraform**.
 
