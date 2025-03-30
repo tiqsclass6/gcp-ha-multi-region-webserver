@@ -8,7 +8,7 @@ resource "google_compute_subnetwork" "subnet_iowa" {
 resource "google_compute_subnetwork" "subnet_london" {
   name          = "subnet-london"
   ip_cidr_range = "10.230.40.0/24"
-  region        = "europe-west1"
+  region        = "europe-west2"
   network       = google_compute_network.vpc_network.id
 }
 
