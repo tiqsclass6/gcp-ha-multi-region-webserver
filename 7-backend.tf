@@ -12,7 +12,7 @@ resource "google_compute_region_instance_group_manager" "mig_iowa" {
 
 resource "google_compute_region_instance_group_manager" "mig_london" {
   name               = "mig-london"
-  region             = "europe-west1"
+  region             = "europe-west2"
   base_instance_name = "web-london"
 
   version {
@@ -62,7 +62,7 @@ resource "google_compute_region_autoscaler" "autoscaler_iowa" {
 
 resource "google_compute_region_autoscaler" "autoscaler_london" {
   name   = "autoscaler-london"
-  region = "europe-west1"
+  region = "europe-west2"
   target = google_compute_region_instance_group_manager.mig_london.self_link
 
   autoscaling_policy {
