@@ -11,7 +11,7 @@ This infrastructure includes:
 - 🌍 **Global HTTP Load Balancer**
 - 🌎 **Managed Instance Groups (MIGs)** in 4 regions:
   - `us-central1` (Iowa)
-  - `europe-west1` (London)
+  - `europe-west2` (London)
   - `asia-northeast1` (Tokyo)
   - `southamerica-east1` (São Paulo)
 - 📈 **Autoscaling**: 2–5 VMs per region based on CPU utilization
